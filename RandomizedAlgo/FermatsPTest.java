@@ -2,11 +2,10 @@
 //Author : Hyder Nabi
 
 package RandomizedAlgo;
-
-public class FermatsPTest {
-	static int n ;
-	
-	public static int gcd(int a, int b)
+class FermatsPrimalityTest{
+	public FermatsPrimalityTest() {}
+	//calculate GCD 
+	private long gcd(long a, long b)
 	{
 		if(b == 0)
 			return a;
@@ -14,42 +13,69 @@ public class FermatsPTest {
 			return gcd(b,a%b);
 	}
 	
-	public static boolean PTest()
+	public boolean PTest(long n)
 	{
 		int counter = 0;
 		while(true)
 		{
-			int max = n-2;
-			int min = 2;
-			int a = (int)Math.floor(Math.random()*(max-min+1)+min);
+			long max = n-2;
+			long min = 2;
+			long a = (int)Math.floor(Math.random()*(max-min+1)+min); //generate a random number between 2 and n-2
 			
-			if(gcd(a,n) != 1)
+			if(gcd(a,n) != 1) //check if a and n are co primes
 			{
-				return false;
+				return false;  //return non prime
 			}
-			long b = (long)Math.pow(a,(n-1));
-			b = b % n;
+			long b= power(a,n-1,n);  //calculate a^(n-1)%n == 1
 			if(b != 1)
 			{
-				return false;
+				return false; //return non prime
 			}
+			
 			counter++;
-			if(counter>10)
+			if(counter>10) //Threshold for no of iterations
 			{
 				break;
 			}
 		}
-		return true;
+		return true; //return probable prime
 	}
 	
+	//calculate a^(n-1)%n iteratively
+	private long power(long a,long n, long p)
+    {
+        // Initialize result
+        long res = 1;
+         
+        // Update 'a' if 'a' >= p
+        a = a % p;
+     
+        while (n > 0)
+        {
+            // If n is odd, multiply 'a' with result
+            if ((n & 1) == 1)
+                res = (res * a) % p;
+     
+            // n must be even now
+            n = n >> 1; // n = n/2
+            a = (a * a) % p;
+        }
+        return res;
+    }
+}
+
+public class FermatsPTest {
+	
+	
 	public static void main(String[] args) {
-		n = 91;
-		if(PTest() == true)
-		{
-			System.out.println("Prime !");
-		}else{
-			System.out.println("Not Prime !");
+		FermatsPrimalityTest o = new FermatsPrimalityTest();
+		if(o.PTest(17)) {
+			System.out.println("Yes");
+		}else {
+			System.out.println("no");
 		}
+		
+		
 	}
 
 }
